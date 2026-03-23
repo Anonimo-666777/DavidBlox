@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DavidScriptsHub</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #050810;
+      --surface: #0d1117;
+      --surface2: #161b25;
+      --border: #1e2736;
+      --accent: #00d4ff;
+      --accent2: #7c3aed;
+      --accent3: #06b96f;
+      --red: #ef4444;
+      --orange: #f97316;
+      --text: #e2e8f0;
+      --muted: #64748b;
+      --glow: 0 0 20px rgba(0, 212, 255, 0.3);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 16px;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Background grid */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Ambient glow blobs */
+    body::after {
+      content: '';
+      position: fixed;
+      top: -200px;
+      left: -200px;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(124,58,237,0.08) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .blob2 {
+      position: fixed;
+      bottom: -200px;
+      right: -200px;
+      width: 700px;
+      height: 700px;
+      background: radial-gradient(circle, rgba(0,212,255,0.06) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── HEADER ── */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(5,8,16,0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+
+    .logo {
+      font-family: 'Orbitron', monospace;
+      font-weight: 900;
+      font-size: 1.2rem;
+      letter-spacing: 2px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo span.accent { color: var(--accent); }
+    .logo span.dim { color: var(--muted); font-weight: 400; }
+
+    .logo-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, var(--accent2), var(--accent));
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    nav {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+    }
+
+    nav a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    nav a:hover { color: var(--accent); }
+
+    .badge-new {
+      background: var(--accent);
+      color: #000;
+      font-size: 0.6rem;
+      font-weight: 700;
+      padding: 1px 5px;
+      border-radius: 3px;
+      letter-spacing: 1px;
+      vertical-align: super;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 5rem 2rem 4rem;
+    }
+
+    .hero-eyebrow {
+      font-size: 0.75rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 1rem;
+      opacity: 0;
+      animation: fadeUp 0.6s 0.2s forwards;
+    }
+
+    .hero h1 {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(2.5rem, 7vw, 5rem);
+      font-weight: 900;
+      line-height: 1.05;
+      letter-spacing: -1px;
+      margin-bottom: 1.2rem;
+      opacity: 0;
+      animation: fadeUp 0.6s 0.35s forwards;
+    }
+
+    .hero h1 .line1 { color: var(--text); }
+    .hero h1 .line2 {
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      max-width: 540px;
+      margin: 0 auto 2.5rem;
+      color: var(--muted);
+      font-size: 1.05rem;
+      line-height: 1.7;
+      opacity: 0;
+      animation: fadeUp 0.6s 0.5s forwards;
+    }
+
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      opacity: 0;
+      animation: fadeUp 0.6s 0.65s forwards;
+    }
+
+    .stat { text-align: center; }
+    .stat-num {
+      font-family: 'Orbitron', monospace;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--muted);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    /* ── SEARCH ── */
+    .search-wrap {
+      position: relative;
+      z-index: 1;
+      max-width: 560px;
+      margin: 0 auto 3rem;
+      padding: 0 2rem;
+      opacity: 0;
+      animation: fadeUp 0.6s 0.55s forwards;
+    }
+
+    .search-input {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.85rem 1rem 0.85rem 3rem;
+      color: var(--text);
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .search-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(0,212,255,0.1);
+    }
+    .search-icon {
+      position: absolute;
+      left: 2.9rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      font-size: 1rem;
+      pointer-events: none;
+    }
+
+    /* ── CATEGORY TABS ── */
+    .tabs-wrap {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      justify-content: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      padding: 0 2rem 2.5rem;
+    }
+
+    .tab-btn {
+      padding: 0.5rem 1.2rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--muted);
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .tab-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .tab-btn.active {
+      background: rgba(0,212,255,0.1);
+      border-color: var(--accent);
+      color: var(--accent);
+      box-shadow: 0 0 12px rgba(0,212,255,0.15);
+    }
+
+    .tab-count {
+      background: rgba(0,212,255,0.15);
+      color: var(--accent);
+      font-size: 0.7rem;
+      padding: 1px 6px;
+      border-radius: 4px;
+    }
+
+    /* ── GRID ── */
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem 5rem;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .section-title {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.8rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .section-line {
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .scripts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.2rem;
+    }
+
+    /* ── SCRIPT CARD ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      animation: fadeUp 0.5s forwards;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(0,212,255,0.3);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(0,212,255,0.1);
+    }
+
+    .card-top {
+      padding: 1.2rem 1.2rem 0;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 0.8rem;
+    }
+
+    .card-info { flex: 1; }
+
+    .card-category {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .card-name {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+
+    .card-desc {
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .card-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+
+    /* Code block */
+    .card-code {
+      margin: 1rem 1.2rem 0;
+      background: #0a0e18;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .code-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.4rem 0.8rem;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255,255,255,0.02);
+    }
+
+    .code-lang {
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .code-dots {
+      display: flex;
+      gap: 4px;
+    }
+    .code-dots span {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    pre {
+      padding: 0.8rem;
+      font-size: 0.78rem;
+      line-height: 1.6;
+      color: #94a3b8;
+      overflow-x: auto;
+      max-height: 100px;
+      overflow-y: hidden;
+      font-family: 'Courier New', monospace;
+      white-space: pre;
+    }
+
+    pre .kw { color: var(--accent2); font-weight: 600; }
+    pre .str { color: var(--accent3); }
+    pre .fn { color: var(--accent); }
+    pre .cm { color: #475569; font-style: italic; }
+
+    /* Card footer */
+    .card-footer {
+      padding: 1rem 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.8rem;
+      margin-top: auto;
+    }
+
+    .tag {
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 5px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .tag-undetected { background: rgba(6,185,111,0.15); color: var(--accent3); }
+    .tag-patched { background: rgba(239,68,68,0.15); color: var(--red); }
+    .tag-updated { background: rgba(0,212,255,0.15); color: var(--accent); }
+    .tag-op { background: rgba(249,115,22,0.15); color: var(--orange); }
+
+    .btn-copy {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0.45rem 1rem;
+      border-radius: 7px;
+      border: 1px solid var(--border);
+      background: var(--surface2);
+      color: var(--text);
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-copy:hover {
+      background: var(--accent);
+      color: #000;
+      border-color: var(--accent);
+    }
+
+    .btn-copy.copied {
+      background: var(--accent3);
+      color: #000;
+      border-color: var(--accent3);
+    }
+
+    /* Category colors */
+    .cat-universal { color: var(--accent); }
+    .cat-universal .card-icon { background: rgba(0,212,255,0.1); }
+    .cat-troll { color: var(--orange); }
+    .cat-troll .card-icon { background: rgba(249,115,22,0.1); }
+    .cat-visual { color: var(--accent2); }
+    .cat-visual .card-icon { background: rgba(124,58,237,0.1); }
+    .cat-utility { color: var(--accent3); }
+    .cat-utility .card-icon { background: rgba(6,185,111,0.1); }
+    .cat-combat { color: var(--red); }
+    .cat-combat .card-icon { background: rgba(239,68,68,0.1); }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative;
+      z-index: 1;
+      border-top: 1px solid var(--border);
+      padding: 2rem;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    footer span { color: var(--accent); font-weight: 600; }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* stagger cards */
+    .card:nth-child(1) { animation-delay: 0.05s; }
+    .card:nth-child(2) { animation-delay: 0.1s; }
+    .card:nth-child(3) { animation-delay: 0.15s; }
+    .card:nth-child(4) { animation-delay: 0.2s; }
+    .card:nth-child(5) { animation-delay: 0.25s; }
+    .card:nth-child(6) { animation-delay: 0.3s; }
+    .card:nth-child(7) { animation-delay: 0.35s; }
+    .card:nth-child(8) { animation-delay: 0.4s; }
+    .card:nth-child(9) { animation-delay: 0.45s; }
+
+    .hidden { display: none !important; }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+  </style>
+</head>
+<body>
+<div class="blob2"></div>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">
+    <div class="logo-icon">⚡</div>
+    <span>DAVID<span class="accent">SCRIPTS</span><span class="dim">HUB</span></span>
+  </div>
+  <nav>
+    <a href="#">Scripts</a>
+    <a href="#">Discord</a>
+    <a href="#">GitHub</a>
+    <a href="#">David Hub <span class="badge-new">V4</span></a>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <p class="hero-eyebrow">⚡ Roblox Scripts Collection</p>
+  <h1>
+    <div class="line1">Scripts Poderosos</div>
+    <div class="line2">Para Todo Jogo</div>
+  </h1>
+  <p>Coleção de scripts Lua gratuitos para Roblox. Todos testados, categorizados e prontos pra usar. Copia e cola no teu executor favorito.</p>
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-num" id="totalCount">9</div>
+      <div class="stat-label">Scripts</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">5</div>
+      <div class="stat-label">Categorias</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">Free</div>
+      <div class="stat-label">Sempre</div>
+    </div>
+  </div>
+</section>
+
+<!-- SEARCH -->
+<div class="search-wrap">
+  <span class="search-icon">🔍</span>
+  <input class="search-input" type="text" placeholder="Buscar script..." id="searchInput" oninput="filterScripts()" />
+</div>
+
+<!-- TABS -->
+<div class="tabs-wrap">
+  <button class="tab-btn active" data-cat="all" onclick="setCategory(this,'all')">
+    🌐 Todos <span class="tab-count" id="count-all">9</span>
+  </button>
+  <button class="tab-btn" data-cat="universal" onclick="setCategory(this,'universal')">
+    🔮 Universal <span class="tab-count" id="count-universal">3</span>
+  </button>
+  <button class="tab-btn" data-cat="troll" onclick="setCategory(this,'troll')">
+    😈 Troll <span class="tab-count" id="count-troll">2</span>
+  </button>
+  <button class="tab-btn" data-cat="visual" onclick="setCategory(this,'visual')">
+    ✨ Visual <span class="tab-count" id="count-visual">2</span>
+  </button>
+  <button class="tab-btn" data-cat="utility" onclick="setCategory(this,'utility')">
+    🛠️ Utility <span class="tab-count" id="count-utility">1</span>
+  </button>
+  <button class="tab-btn" data-cat="combat" onclick="setCategory(this,'combat')">
+    ⚔️ Combat <span class="tab-count" id="count-combat">1</span>
+  </button>
+</div>
+
+<!-- SCRIPTS GRID -->
+<div class="container">
+  <div class="section-header">
+    <span class="section-title" id="sectionLabel">Todos os Scripts</span>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="scripts-grid" id="scriptsGrid">
+
+    <!-- CARD 1 -->
+    <div class="card" data-cat="universal" data-name="david hub universal">
+      <div class="card-top">
+        <div class="card-info">
+          <div class="card-category cat-universal">🔮 Universal</div>
+          <div class="card-name">David Hub v4</div>
+          <div class="card-desc">Hub universal completo com visual, teleport, ESP e muito mais. Funciona na maioria dos jogos.</div>
+        </div>
+        <div class="card-icon cat-universal">🔮</div>
+      </div>
+      <div class="card-code">
+        <div class="code-header">
+          <span class="code-lang">Lua</span>
+          <div class="code-dots">
+            <span style="background:#ef4444"></span>
+            <span style="background:#f59e0b"></span>
+            <span style="background:#22c55e"></span>
+          </div>
+        </div>
+        <pre><span class="cm">-- David Hub v4.0</span>
+<span class="kw">loadstring</span>(<span class="fn">game</span>:GetService(
+  <span class="str">"HttpService"</span>))(
+  <span class="str">"https://raw.githubusercontent.com/
+  davidgames3d/davidhub/main/v4.lua"</span>
+)()</pre>
+      </div>
+      <div class="card-footer">
+        <span class="tag tag-updated">Atualizado</span>
+        <button class="btn-copy" onclick="copyCode(this, 'loadstring(game:GetService(\"HttpService\")):JSONDecode(game:HttpGet(\"https://raw.githubusercontent.com/davidgames3d/davidhub/main/v4.lua\"))()')">📋 Copiar</button>
+      </div>
+    </div>
+
+    <!-- CARD 2 -->
+    <div class="card" data-cat="universal" data-name="speed jump universal">
+      <div class="card-top">
+        <div class="card-info">
+          <div class="card-category cat-universal">🔮 Universal</div>
+          <div class="card-name">Speed & Jump Hack</div>
+          <div class="card-desc">Aumenta velocidade e pulo do personagem. Funciona em qualquer jogo Roblox sem anticheat pesado.</div>
+        </div>
+        <div class="card-icon cat-universal">🏃</div>
+      </div>
+      <div class="card-code">
+        <div class="code-header">
+          <span class="code-lang">Lua</span>
+          <div class="code-dots">
+            <span style="background:#ef4444"></span>
+            <span style="background:#f59e0b"></span>
+            <span style="background:#22c55e"></span>
+          </div>
+        </div>
+        <pre><span class="kw">local</span> plr = <span class="fn">game</span>.Players.LocalPlayer
+<span class="kw">local</span> char = plr.Character
+char.Humanoid.WalkSpeed = <span class="str">100</span>
+char.Humanoid.JumpPower = <span class="str">150</span></pre>
+      </div>
+      <div class="card-footer">
+        <span class="tag tag-undetected">Undetected</span>
+        <button class="btn-copy" onclick="copyCode(this, 'local plr = game.Players.LocalPlayer\nlocal char = plr.Character\nchar.Humanoid.WalkSpeed = 100\nchar.Humanoid.JumpPower = 150')">📋 Copiar</button>
+      </div>
+    </div>
+
+    <!-- CARD 3 -->
+    <div class="card" data-cat="universal" data-name="noclip universal">
+      <div class="card-top">
+        <div class="card-info">
+          <div class="card-category cat-universal">🔮 Universal</div>
+          <div class="card-name">Noclip Toggle</div>
+          <div class="card-desc">Atravessa paredes ao segurar a tecla. Toggle on/off com N. Funciona universalmente.</div>
+        </div>
+        <div class="card-icon cat-universal">👻</div>
+      </div>
+      <div class="card-code">
+        <div class="code-header">
+          <span class="code-lang">Lua</span>
+          <div class="code-dots">
+            <span style="background:#ef4444"></span>
+            <span style="background:#f59e0b"></span>
+            <span style="background:#22c55e"></span>
+          </div>
+        </div>
+        <pre><span class="kw">local</span> noclip = <span class="kw">false</span>
+<span class="fn">game</span>:GetService(<span class="str">"RunService"</span>).Stepped:Connect(
+  <span class="kw">function</span>()
+    <span class="kw">if</span> noclip <span class="kw">then</span>
+      <span class="cm">-- cancela colisão</span>
+    <span class="kw">end</span>
+  <span class="kw">end</span>)</pre>
+      </div>
+      <div class="card-footer">
+        <span class="tag tag-undetected">Undetected</span>
+        <button class="btn-copy" onclick="copyCode(this, 'local noclip = false\nlocal rs = game:GetService(\"RunService\")\nrs.Stepped:Connect(function()\n  if noclip then\n    for _,v in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do\n      if v:IsA(\"BasePart\") then v.CanCollide = false end\n    end\n  end\nend)')">📋 Copiar</button>
+      </div>
+    </div>
+
+    <!-- CARD 4 TROLL -->
+    <div class="card" data-cat="troll" data-name="fling troll jogador">
+      <div class="card-top">
+        <div class="card-info">
+          <div class="card-category cat-troll">😈 Troll</div>
+          <div class="card-name">Fling Player</div>
+          <div class="card-desc">Lança jogadores pra longe ao se aproximar. Ótimo pra trolagem em jogos abertos.</div>
+        </div>
+        <div class="card-icon cat-troll">💥</div>
+      </div>
+      <div class="card-code">
+        <div class="code-header">
+          <span class="code-lang">Lua</span>
+          <div class="code-dots">
+            <span style="background:#ef4444"></span>
+            <span style="background:#f59e0b"></span>
+            <span style="background:#22c55e"></span>
+          </div>
+        </div>
+        <pre><span class="kw">local</span> target = <span class="str">"NomeDoJogador"</span>
+<span class="kw">local</span> p = <span class="fn">game</span>.Players[target]
+<span class="kw">local</span> hrp = p.Character.HumanoidRootPart
+hrp.Velocity = <span class="fn">Vector3</span>.new(<span class="str">0,9999,0</span>)</pre>
+      </div>
+      <div class="card-footer">
+        <span class="tag tag-op">OP</span>
+        <button class="btn-copy" onclick="copyCode(this, 'local target = \"NomeDoJogador\"\nlocal p = game.Players[target]\nlocal hrp = p.Character.HumanoidRootPart\nhrp.Velocity = Vector3.new(0,9999,0)')">📋 Copiar</button>
+      </div>
+    </div>
+
+    <!-- CARD 5 TROLL -->
+    <div class="card" data-cat="troll" data-name="chat spam troll">
+      <div class="card-top">
+        <div class="card-info">
+          <div class="card-category cat-troll">😈 Troll</div>
+          <div class="card-name">Fake Death Loop</div>
+          <div class="card-desc">Faz animação de morte repetida sem realmente morrer. Confunde outros jogadores.</div>
+        </div>
+        <div class="card-icon cat-troll">💀</div>
+      </div>
+      <div class="card-code">
+        <div class="code-header">
+          <span class="code-lang">Lua</span>
+          <div class="code-dots">
+            <span style="background:#ef4444"></span>
+            <span style="background:#f59e0b"></span>
+            <span style="background:#22c55e"></span>
+          </div>
+        </div>
+        <pre><span class="kw">local</span> hum = <span class="fn">game</span>.Players.LocalPlayer
+  .Character.Humanoid
+<span class="kw">while</span> <span class="kw">true</span> <span class="kw">do</span>
+  hum:TakeDamage(<span class="str">1</span>)
+  <span class="fn">task</span>.wait(<span class="str">0.1</span>)
+<span class="kw">end</span></pre>
+      </div>
+      <div class="card-footer">
+        <span class="tag tag-updated">Divertido</span>
+        <button class="btn-copy" onclick="copyCode(this, 'local hum = game.Players.LocalPlayer.Character.Humanoid\nwhile true do\n  hum:TakeDamage(1)\n  task.wait(0.1)\nend')">📋 Copiar</button>
+      </div>
+    </div>
+
+    <!-- CARD 6 VISUAL -->
+    <div class="card" data-cat="visual" data-name="fullbright visual">
+      <div class="card-top">
+        <div class="card-info">
+          <div class="card-category cat-visual">✨ Visual</div>
+          <div class="card-name">Fullbright</div>
+          <div class="card-desc">Remove iluminação e deixa tudo visível no escuro. Perfeito pra jogos de terror.</div>
+        </div>
+        <div class="card-icon cat-visual">💡</div>
+      </div>
+      <div class="card-code">
+        <div class="code-header">
+          <span class="code-lang">Lua</span>
+          <div class="code-dots">
+            <span style="background:#ef4444"></span>
+            <span style="background:#f59e0b"></span>
+            <span style="background:#22c55e"></span>
+          </div>
+        </div>
+        <pre><span class="kw">local</span> lighting = <span class="fn">game</span>:GetService(<span class="str">"Lighting"</span>)
+lighting.Brightness = <span class="str">2</span>
+lighting.ClockTime = <span class="str">14</span>
+lighting.FogEnd = <span class="str">100000</span>
+lighting.GlobalShadows = <span class="kw">false</span>
+lighting.Ambient = <span class="fn">Color3</span>.new(<span class="str">1,1,1</span>)</pre>
+      </div>
+      <div class="card-footer">
+        <span class="tag tag-undetected">Undetected</span>
+        <button class="btn-copy" onclick="copyCode(this, 'local lighting = game:GetService(\"Lighting\")\nlighting.Brightness = 2\nlighting.ClockTime = 14\nlighting.FogEnd = 100000\nlighting.GlobalShadows = false\nlighting.Ambient = Color3.new(1,1,1)')">📋 Copiar</button>
+      </div>
+    </div>
+
+    <!-- CARD 7 VISUAL -->
+    <div class="card" data-cat="visual" data-name="rainbow character visual">
+      <div class="card-top">
+        <div class="card-info">
+          <div class="card-category cat-visual">✨ Visual</div>
+          <div class="card-name">Rainbow Character</div>
+          <div class="card-desc">Deixa o personagem com efeito arco-íris animado. Visual bem chamativo nos jogos.</div>
+        </div>
+        <div class="card-icon cat-visual">🌈</div>
+      </div>
+      <div class="card-code">
+        <div class="code-header">
+          <span class="code-lang">Lua</span>
+          <div class="code-dots">
+            <span style="background:#ef4444"></span>
+            <span style="background:#f59e0b"></span>
+            <span style="background:#22c55e"></span>
+          </div>
+        </div>
+        <pre><span class="kw">local</span> h = <span class="str">0</span>
+<span class="fn">game</span>:GetService(<span class="str">"RunService"</span>).RenderStepped:Connect(
+  <span class="kw">function</span>()
+    h = (h + <span class="str">1</span>) % <span class="str">360</span>
+    <span class="cm">-- aplica cor HSV em cada part</span>
+  <span class="kw">end</span>)</pre>
+      </div>
+      <div class="card-footer">
+        <span class="tag tag-updated">Visual</span>
+        <button class="btn-copy" onclick="copyCode(this, 'local h = 0\ngame:GetService(\"RunService\").RenderStepped:Connect(function()\n  h = (h + 1) % 360\n  for _, v in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do\n    if v:IsA(\"BasePart\") then\n      v.Color = Color3.fromHSV(h/360, 1, 1)\n    end\n  end\nend)')">📋 Copiar</button>
+      </div>
+    </div>
+
+    <!-- CARD 8 UTILITY -->
+    <div class="card" data-cat="utility" data-name="anti afk utility">
+      <div class="card-top">
+        <div class="card-info">
+          <div class="card-category cat-utility">🛠️ Utility</div>
+          <div class="card-name">Anti-AFK</div>
+          <div class="card-desc">Previne kick por inatividade. Simula movimento a cada intervalo. Essencial pra farms longos.</div>
+        </div>
+        <div class="card-icon cat-utility">⏰</div>
+      </div>
+      <div class="card-code">
+        <div class="code-header">
+          <span class="code-lang">Lua</span>
+          <div class="code-dots">
+            <span style="background:#ef4444"></span>
+            <span style="background:#f59e0b"></span>
+            <span style="background:#22c55e"></span>
+          </div>
+        </div>
+        <pre><span class="kw">local</span> vu = <span class="fn">game</span>:GetService(<span class="str">"VirtualUser"</span>)
+<span class="fn">game</span>:GetService(<span class="str">"Players"</span>).LocalPlayer
+  .Idled:Connect(<span class="kw">function</span>()
+    vu:Button2Down(<span class="fn">Vector2</span>.new(<span class="str">0,0</span>),
+      <span class="fn">workspace</span>.CurrentCamera.CFrame)
+    <span class="fn">task</span>.wait(<span class="str">1</span>)
+    vu:Button2Up(<span class="fn">Vector2</span>.new(<span class="str">0,0</span>),
+      <span class="fn">workspace</span>.CurrentCamera.CFrame)
+  <span class="kw">end</span>)</pre>
+      </div>
+      <div class="card-footer">
+        <span class="tag tag-undetected">Seguro</span>
+        <button class="btn-copy" onclick="copyCode(this, 'local vu = game:GetService(\"VirtualUser\")\ngame:GetService(\"Players\").LocalPlayer.Idled:Connect(function()\n  vu:Button2Down(Vector2.new(0,0), workspace.CurrentCamera.CFrame)\n  task.wait(1)\n  vu:Button2Up(Vector2.new(0,0), workspace.CurrentCamera.CFrame)\nend)')">📋 Copiar</button>
+      </div>
+    </div>
+
+    <!-- CARD 9 COMBAT -->
+    <div class="card" data-cat="combat" data-name="aimbot combat pvp">
+      <div class="card-top">
+        <div class="card-info">
+          <div class="card-category cat-combat">⚔️ Combat</div>
+          <div class="card-name">Silent Aim</div>
+          <div class="card-desc">Ajusta a mira em direção ao jogador mais próximo sem mover a câmera. Funciona em FPS/TPS.</div>
+        </div>
+        <div class="card-icon cat-combat">🎯</div>
+      </div>
+      <div class="card-code">
+        <div class="code-header">
+          <span class="code-lang">Lua</span>
+          <div class="code-dots">
+            <span style="background:#ef4444"></span>
+            <span style="background:#f59e0b"></span>
+            <span style="background:#22c55e"></span>
+          </div>
+        </div>
+        <pre><span class="cm">-- Silent Aim básico</span>
+<span class="kw">local</span> cam = <span class="fn">workspace</span>.CurrentCamera
+<span class="kw">local</span> <span class="kw">function</span> <span class="fn">getClosest</span>()
+  <span class="cm">-- retorna jogador + próximo</span>
+  <span class="kw">local</span> closest, dist = <span class="kw">nil</span>, <span class="str">math.huge</span>
+  <span class="kw">return</span> closest
+<span class="kw">end</span></pre>
+      </div>
+      <div class="card-footer">
+        <span class="tag tag-op">OP</span>
+        <button class="btn-copy" onclick="copyCode(this, '-- Silent Aim\nlocal cam = workspace.CurrentCamera\nlocal function getClosest()\n  local closest, dist = nil, math.huge\n  for _, p in pairs(game.Players:GetPlayers()) do\n    if p ~= game.Players.LocalPlayer and p.Character then\n      local hrp = p.Character:FindFirstChild(\"HumanoidRootPart\")\n      if hrp then\n        local d = (hrp.Position - cam.CFrame.Position).Magnitude\n        if d < dist then dist = d; closest = p end\n      end\n    end\n  end\n  return closest\nend')">📋 Copiar</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  Feito por <span>David</span> · DavidScriptsHub · Todos os scripts são para fins educacionais
+</footer>
+
+<script>
+  let currentCat = 'all';
+
+  function setCategory(btn, cat) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentCat = cat;
+
+    const labels = {
+      all: 'Todos os Scripts',
+      universal: 'Universal',
+      troll: 'Troll',
+      visual: 'Visual',
+      utility: 'Utility',
+      combat: 'Combat'
+    };
+    document.getElementById('sectionLabel').textContent = labels[cat] || cat;
+    filterScripts();
+  }
+
+  function filterScripts() {
+    const search = document.getElementById('searchInput').value.toLowerCase();
+    const cards = document.querySelectorAll('.card');
+    let visible = 0;
+
+    cards.forEach(card => {
+      const cat = card.dataset.cat;
+      const name = card.dataset.name;
+      const catMatch = currentCat === 'all' || cat === currentCat;
+      const searchMatch = !search || name.includes(search);
+      if (catMatch && searchMatch) {
+        card.classList.remove('hidden');
+        visible++;
+      } else {
+        card.classList.add('hidden');
+      }
+    });
+
+    document.getElementById('totalCount').textContent = visible;
+  }
+
+  function copyCode(btn, code) {
+    navigator.clipboard.writeText(code).then(() => {
+      const prev = btn.innerHTML;
+      btn.innerHTML = '✅ Copiado!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.innerHTML = prev;
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  }
+
+  // Count tabs
+  const counts = { universal: 0, troll: 0, visual: 0, utility: 0, combat: 0 };
+  document.querySelectorAll('.card').forEach(c => {
+    const cat = c.dataset.cat;
+    if (counts[cat] !== undefined) counts[cat]++;
+  });
+  Object.entries(counts).forEach(([cat, n]) => {
+    const el = document.getElementById('count-' + cat);
+    if (el) el.textContent = n;
+  });
+</script>
+</body>
+</html>
